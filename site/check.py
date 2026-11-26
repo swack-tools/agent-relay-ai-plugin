@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Validate generated Agent Relay site links, images, landmarks, canonicals, and CNAME."""
+from __future__ import annotations
+
 import argparse
 from html.parser import HTMLParser
 from pathlib import Path
