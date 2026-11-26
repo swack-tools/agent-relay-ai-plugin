@@ -1,0 +1,27 @@
+# Routes on an Envoy Gateway named `lan` with an HTTPS listener `https-wildcard`
+# (a wildcard certificate) and a plain `http` listener. The overlay sets the
+# hostname.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: relay-map
+spec:
+  parentRefs:
+    - {name: lan, namespace: envoy-gateway-system, sectionName: https-wildcard}
+  hostnames: [relay-map.example.com]
+  rules:
+    - matches: [{path: {type: PathPrefix, value: /}}]
+      backendRefs: [{name: relay-map, port: 7878}]
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: relay-map-http-redirect
+spec:
+  parentRefs:
+    - {name: lan, namespace: envoy-gateway-system, sectionName: http}
+  hostnames: [relay-map.example.com]
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect: {scheme: https, statusCode: 301}

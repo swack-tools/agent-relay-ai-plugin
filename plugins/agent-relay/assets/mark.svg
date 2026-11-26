@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Two message bubbles linked by a relay arc">
+  <rect width="512" height="512" rx="112" fill="#1F3A5F"/>
+  <rect x="72" y="120" width="210" height="150" rx="40" fill="#F4EBD9"/>
+  <path d="M120 266 L104 330 L168 270 Z" fill="#F4EBD9"/>
+  <rect x="230" y="242" width="210" height="150" rx="40" fill="#E8A33D"/>
+  <path d="M392 388 L408 452 L344 392 Z" fill="#E8A33D"/>
+  <circle cx="140" cy="195" r="16" fill="#1F3A5F"/>
+  <circle cx="190" cy="195" r="16" fill="#1F3A5F"/>
+  <circle cx="320" cy="317" r="16" fill="#1F3A5F"/>
+  <circle cx="370" cy="317" r="16" fill="#1F3A5F"/>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "name": "agent-relay",
+  "owner": {
+    "name": "SwackTech LLC"
+  },
+  "metadata": {
+    "description": "Let Claude Code, Codex and Antigravity sessions message each other, locally or over ssh."
+  },
+  "plugins": [
+    {
+      "name": "agent-relay",
+      "source": "./plugins/agent-relay",
+      "description": "List live Claude Code, Codex and Antigravity sessions, send them messages, and read their replies, across computers over ssh.",
+      "category": "productivity",
+      "displayName": "Agent Relay"
+    }
+  ]
+}

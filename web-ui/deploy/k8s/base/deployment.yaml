@@ -1,0 +1,73 @@
+# One hub. It collects nothing from its own container (local = false in
+# relay-map.toml); every computer is reached over ssh with the key in the
+# relay-map-ssh Secret, the same way a desktop hub reaches remote computers.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: relay-map
+  labels: {app.kubernetes.io/name: relay-map}
+spec:
+  replicas: 1                       # the hub keeps its state in memory
+  strategy: {type: Recreate}
+  selector:
+    matchLabels: {app.kubernetes.io/name: relay-map}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: relay-map}
+    spec:
+      hostname: relay-map           # broadcasts are sent as operator:relay-map@relay-map
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001              # lets the hub read the 0440 key; ssh only rejects loose keys it owns
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: relay-map
+          image: relay-map
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RELAY_MAP_BROADCAST_VIA     # ssh alias whose agent-relay sends broadcasts; empty = off
+              valueFrom:
+                configMapKeyRef: {name: relay-map-config, key: broadcast_via, optional: true}
+          ports:
+            - {name: http, containerPort: 7878}
+          readinessProbe:
+            httpGet: {path: /, port: http}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /, port: http}
+            periodSeconds: 30
+            failureThreshold: 4
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: config, mountPath: /etc/relay-map, readOnly: true}
+            - {name: ssh, mountPath: /home/relay/.ssh, readOnly: true}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: config
+          configMap:
+            name: relay-map-config
+            items: [{key: relay-map.toml, path: relay-map.toml}]
+        - name: ssh
+          projected:
+            defaultMode: 0440
+            sources:
+              - secret:
+                  name: relay-map-ssh
+                  items: [{key: id_ed25519, path: id_ed25519}]
+              - configMap:
+                  name: relay-map-config
+                  items:
+                    - {key: ssh_config, path: config}
+                    - {key: known_hosts, path: known_hosts}
+        - name: tmp
+          emptyDir: {sizeLimit: 64Mi}

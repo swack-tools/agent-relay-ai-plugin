@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relay Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="map"></canvas>
+
+<header id="top">
+  <div class="brand"><span class="logo">◉</span> RELAY<b>MAP</b></div>
+  <div id="hosts"></div>
+  <div id="stats"></div>
+  <div class="controls">
+    <button id="btn-attn" title="Needs attention (a)">⚠ <b>0</b></button>
+    <span class="searchbox"><input id="search" type="search" placeholder="Find…  kind:codex status:waiting" autocomplete="off" title="Words, or filters like kind: host: status: project: model: has: (press /)"><span id="search-count"></span></span>
+    <select id="window" title="Time window">
+      <option value="1">1 h</option>
+      <option value="6">6 h</option>
+      <option value="24" selected>24 h</option>
+      <option value="72">72 h</option>
+    </select>
+    <label title="Show agents outside the configured pools, grouped by computer, project and agent type"><input id="opt-unpooled" type="checkbox" checked> by computer</label>
+    <label title="Show Antigravity swarm traffic"><input id="opt-swarm" type="checkbox" checked> swarm</label>
+    <label title="Draw every swarm member as its own node"><input id="opt-expand" type="checkbox"> expand swarms</label>
+ <select id="color-by" title="Colour agents by (c)">
+      <option value="kind">● type</option>
+      <option value="health">● health</option>
+      <option value="spend">● spend</option>
+    </select>
+    <button id="btn-table" title="Agents table, attention and message log (t)">☰ Fleet</button>
+    <button id="btn-group" title="Choose how agents are grouped (g)">▤ Group by</button>
+    <button id="btn-replay" title="Replay the window (r)">▶ Replay</button>
+    <button id="btn-fit" title="Zoom out (Esc)">⤢</button>
+    <button id="btn-broadcast" class="primary" title="Message every agent (b)">📡 Broadcast</button>
+    <button id="btn-help" title="Keyboard shortcuts (?)">?</button>
+  </div>
+</header>
+
+<div id="replay-clock" class="hidden"></div>
+
+<section id="watch" class="hidden"></section>
+
+<section id="timeline"></section>
+
+<section id="drawer" class="hidden">
+  <nav>
+    <button id="tab-attention" data-tab="attention">⚠ Attention</button>
+    <button id="tab-agents" data-tab="agents">Agents</button>
+    <button id="tab-messages" data-tab="messages">Messages</button>
+    <button id="tab-spend" data-tab="spend">$ Spend</button>
+    <span class="grow"></span>
+    <button id="drawer-close" title="Close (Esc)">✕</button>
+  </nav>
+  <div id="drawer-body"></div>
+</section>
+
+<div id="help" class="hidden">
+  <div class="dialog">
+    <h2>Keyboard</h2>
+    <table class="keys">
+      <tr><td><kbd>/</kbd></td><td>Search. Words, or filters: <code>kind:codex</code> <code>host:laptop</code> <code>status:waiting</code> <code>status:alert</code> <code>project:x</code> <code>model:opus</code> <code>has:git</code>. <kbd>Enter</kbd> zooms to the best match.</td></tr>
+      <tr><td><kbd>j</kbd> <kbd>k</kbd></td><td>Next / previous agent (matches only, most recent first)</td></tr>
+      <tr><td><kbd>n</kbd></td><td>Jump to the next thing that needs attention</td></tr>
+      <tr><td><kbd>a</kbd> <kbd>t</kbd> <kbd>m</kbd> <kbd>s</kbd></td><td>Attention list, agents table, message log, spend breakdown</td></tr>
+      <tr><td><kbd>c</kbd></td><td>Colour agents by type → health → spend</td></tr>
+      <tr><td><kbd>w</kbd></td><td>Watch (star) the selected agent</td></tr>
+      <tr><td><kbd>y</kbd></td><td>Copy the selected agent's relay address</td></tr>
+      <tr><td><kbd>g</kbd></td><td>Group by</td></tr>
+      <tr><td><kbd>r</kbd> <kbd>f</kbd></td><td>Replay the window, fit everything</td></tr>
+      <tr><td><kbd>b</kbd></td><td>Broadcast (always previews first)</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Close / clear selection</td></tr>
+      <tr><td>link</td><td>The address bar keeps the search, tab, colour mode and selected agent, so a link or reload reopens the same view.</td></tr>
+    </table>
+    <h2>Health</h2>
+    <p class="muted"><b style="color:#46f5a0">working</b> active in the last 2 min ·
+    <b style="color:#ffd166">waiting</b> process alive but quiet (likely waiting for you) ·
+    <b style="color:#ff5a36">stuck</b> marked busy but silent 15 min ·
+    <b style="color:#ff4fd8">looping</b> relay ping-pong (8+ msgs in 15 min) or heavy edits to one file ·
+    <b style="color:#6f86c4">idle</b> · <b style="color:#4f5a7a">ended</b></p>
+    <div class="actions"><button id="help-close">Close</button></div>
+  </div>
+</div>
+
+<section id="feed">
+  <h3>LIVE RELAY TRAFFIC</h3>
+  <ul id="feed-list"></ul>
+</section>
+
+<section id="legend">
+  <div class="kinds">
+    <div><i style="background:#ff8a4c"></i>Claude</div>
+    <div><i style="background:#46f5a0"></i>Codex</div>
+    <div><i style="background:#4cb8ff"></i>Antigravity</div>
+    <div><i style="background:#2ee6d6"></i>opencode</div>
+    <div><i style="background:#c78bff"></i>pi</div>
+    <div><i style="background:#ff3b5c"></i>cross-pool</div>
+  </div>
+  <div id="legend-pools"></div>
+  <div class="hint">drag to pan · scroll to zoom · click an agent or a channel</div>
+</section>
+
+<section id="log" class="hidden">
+  <header id="log-head"></header>
+  <div id="log-body"></div>
+</section>
+
+<aside id="panel" class="hidden">
+  <button id="panel-close" title="Close (Esc)">✕</button>
+  <div id="panel-body"></div>
+</aside>
+
+<section id="group-panel" class="hidden">
+  <h3>GROUP BY <span class="muted">outermost circle first</span></h3>
+  <ul id="group-list"></ul>
+  <div class="presets">
+    <button data-preset="host,project,directory,task">Computer › project › folder › task</button>
+    <button data-preset="pool,host,project">Pools › computer › project</button>
+    <button data-preset="host,kind">Computer › agent type</button>
+    <button data-preset="status,host">Status › computer</button>
+    <button data-preset="task">Task only</button>
+  </div>
+</section>
+
+<div id="tooltip" class="hidden"></div>
+<div id="toast" class="hidden"></div>
+
+<div id="modal" class="hidden">
+  <div class="dialog">
+    <h2>📡 Broadcast to agents</h2>
+    <label>To <select id="bc-scope"></select></label>
+    <label>Subject <input id="bc-subject" placeholder="Refocus"></label>
+    <label>Message <textarea id="bc-body" rows="6" placeholder="Hey all, we need to refocus on making sure xyz happens…"></textarea></label>
+    <label class="inline"><input id="bc-stale" type="checkbox"> include agents idle for more than 2 h</label>
+    <div id="bc-plan"></div>
+    <div class="actions">
+      <button id="bc-close">Close</button>
+      <button id="bc-preview">Preview recipients</button>
+      <button id="bc-send" class="primary">Send</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import init from "./pkg/relay_map_web.js";
+  init();
+</script>
+</body>
+</html>

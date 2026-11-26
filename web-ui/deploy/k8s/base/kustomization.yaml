@@ -1,0 +1,16 @@
+# Relay Map on Kubernetes behind an Envoy Gateway. Use through an overlay that
+# supplies the ConfigMap `relay-map-config` (relay-map.toml, ssh_config,
+# known_hosts) and the Secrets `relay-map-ssh` (key id_ed25519) and
+# `relay-map-htpasswd` (key .htpasswd). See ../README.md and ../example.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: relay-map
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - httproute.yaml
+  - securitypolicy.yaml
+images:
+  - name: relay-map
+    newTag: latest

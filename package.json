@@ -1,0 +1,13 @@
+{
+  "name": "agent-relay-ai-plugin",
+  "version": "1.1.0",
+  "description": "Pi package entry for the agent-relay plugin in plugins/agent-relay.",
+  "license": "GPL-3.0-only",
+  "repository": "https://github.com/swack-tools/agent-relay-ai-plugin",
+  "private": true,
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./plugins/agent-relay/pi/agent-relay.ts"],
+    "skills": ["./plugins/agent-relay/skills"]
+  }
+}

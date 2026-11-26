@@ -1,0 +1,4 @@
+interface:
+  display_name: "Relay Map"
+  short_description: "Live pew-pew dashboard of agent-relay traffic, health, and spend"
+  default_prompt: "Open the Relay Map dashboard to inspect live agents, health alerts, and relay traffic."

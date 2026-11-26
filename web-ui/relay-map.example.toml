@@ -1,0 +1,30 @@
+# Copy to relay-map.toml (ignored by git) and adjust.
+listen = "127.0.0.1:7878"
+lookback_hours = 72
+
+# The agent panel's Session log reads the transcript on this computer, then
+# over ssh from the computer that has it, then (when set) from VictoriaLogs by
+# a `session_id` field, for logs a shipper stores there.
+# victorialogs_url = "http://127.0.0.1:9428"
+
+# Computers to collect from over ssh, in addition to this one. Each needs
+# key-based ssh (`ssh <alias> true` with no prompt). The hub copies the
+# matching collector binary from bin/ to ~/.cache/relay-map/ there.
+[[hosts]]
+name = "laptop"          # also the ssh alias unless `ssh` is set
+# ssh = "user@laptop.example"
+
+[[pools]]
+name = "Backend"
+color = "#ff9d3c"
+description = "Sessions working on the API server and background workers"
+match = ["api-server", "worker"]                         # folder or label substrings
+isolated = true                                          # flag traffic that leaves the pool
+
+[[pools]]
+name = "Frontend"
+color = "#33d6ff"
+match = ["web-app", "design-system"]
+# kinds = ["antigravity", "opencode", "pi", "claude"]    # optional: only these agent kinds
+# hosts = ["laptop"]                                     # optional: only these computers
+# agents = ["a1b2c3"]                                    # optional: pull in specific sessions by id prefix or address

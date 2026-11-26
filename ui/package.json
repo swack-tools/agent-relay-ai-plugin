@@ -1,0 +1,11 @@
+{
+  "name": "agent-relay-ui",
+  "version": "1.1.0",
+  "description": "Self-contained MCP App bundle for the Agent Relay pew-pew dashboard",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "^2.0.4",
+    "esbuild": "^0.28.2"
+  }
+}

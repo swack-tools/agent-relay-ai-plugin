@@ -1,0 +1,11 @@
+{
+  "agent-relay": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 ./scripts/relay.py hook --agent antigravity session-start",
+        "timeout": 15
+      }
+    ]
+  }
+}

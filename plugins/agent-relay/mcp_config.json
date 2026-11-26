@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "relay": {
+      "command": "python3",
+      "args": [
+        "-B",
+        "${PLUGIN_ROOT}/scripts/relay_mcp_server.py",
+        "--data-dir",
+        "${PLUGIN_DATA}"
+      ]
+    }
+  }
+}

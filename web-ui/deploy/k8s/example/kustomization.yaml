@@ -1,0 +1,24 @@
+# Example overlay. Copy it outside the repository (it names your computers),
+# fill in the files, then: kubectl apply -k <your copy>
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base               # or a copy of base/ next to your overlay
+images:
+  - name: relay-map
+    newTag: latest        # the tag build-image.sh printed
+configMapGenerator:
+  - name: relay-map-config
+    namespace: relay-map
+    files:
+      - relay-map.toml
+      - ssh_config
+      - known_hosts
+    literals:
+      - broadcast_via=laptop   # ssh alias with agent-relay installed; remove to turn broadcast off
+patches:
+  - target: {kind: HTTPRoute}
+    patch: |-
+      - op: replace
+        path: /spec/hostnames
+        value: [agents.k8s.example.com]

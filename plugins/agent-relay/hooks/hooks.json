@@ -1,0 +1,50 @@
+{
+  "description": "agent-relay for Claude Code: registers the session, delivers relayed messages at turn boundaries, and wakes an idle session when a message arrives.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/relay.py\" hook --agent claude session-start",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/relay.py\" hook --agent claude watch",
+            "asyncRewake": true,
+            "timeout": 3600
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/relay.py\" hook --agent claude prompt",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/relay.py\" hook --agent claude stop",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/relay.py\" hook --agent claude watch",
+            "asyncRewake": true,
+            "timeout": 3600
+          }
+        ]
+      }
+    ]
+  }
+}

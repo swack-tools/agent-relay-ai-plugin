@@ -1,0 +1,13 @@
+# The page shows what every agent is doing and has a broadcast button that
+# prompts them, so the route asks for a password (HTTP basic auth at the
+# gateway; the WebSocket inherits it). Secret relay-map-htpasswd, key .htpasswd,
+# lines of user:{SHA}base64(sha1(password)).
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: relay-map
+spec:
+  targetRefs:
+    - {group: gateway.networking.k8s.io, kind: HTTPRoute, name: relay-map}
+  basicAuth:
+    users: {name: relay-map-htpasswd}

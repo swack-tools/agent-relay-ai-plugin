@@ -1,0 +1,109 @@
+name: Release
+# Nightly beta: a prerelease of main, only when main has commits the last beta lacks.
+# Stable: a release for every pushed tag vX.Y.Z (the tag must match the manifests' version).
+on:
+  schedule:
+    - cron: '17 7 * * *'
+  workflow_dispatch:
+  push:
+    tags: ['v*.*.*']
+permissions:
+  contents: write
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    outputs:
+      kind: ${{ steps.plan.outputs.kind }}
+      tag: ${{ steps.plan.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Decide what to release
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(python3 -c 'import json; print(json.load(open("plugins/agent-relay/.claude-plugin/plugin.json"))["version"])')
+          sha=$(git rev-parse HEAD)
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            tag="$GITHUB_REF_NAME"
+            if [ "$tag" != "v$version" ]; then
+              echo "::error::tag $tag does not match the plugin version $version"
+              exit 1
+            fi
+            { echo "kind=stable"; echo "tag=$tag"; echo "version=$version"; } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          last=$(gh release list --limit 50 --json tagName,isPrerelease \
+                   --jq '[.[] | select(.isPrerelease and (.tagName | test("-beta\\.")))][0].tagName // ""')
+          if [ -n "$last" ]; then
+            last_sha=$(git rev-list -n 1 "refs/tags/$last" 2>/dev/null || true)
+            if [ "$last_sha" = "$sha" ]; then
+              echo "No commits since $last; nothing to release."
+              echo "kind=none" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          beta="$version-beta.$(date -u +%Y%m%d%H%M)"
+          { echo "kind=beta"; echo "tag=v$beta"; echo "version=$beta"; } >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        if: steps.plan.outputs.kind != 'none'
+        with:
+          python-version: '3.9'
+      - name: Checks
+        if: steps.plan.outputs.kind != 'none'
+        run: |
+          python3 -B scripts/check_plugin.py
+          python3 -B -m unittest discover -s tests -v
+      - name: Build deterministic release archives
+        if: steps.plan.outputs.kind != 'none'
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          rm -rf dist
+          python3 -B scripts/package_release.py dist --version "$VERSION"
+          (cd dist && sha256sum -c SHA256SUMS)
+          ls -lh dist/
+      - name: Publish
+        if: steps.plan.outputs.kind != 'none'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.plan.outputs.tag }}
+          KIND: ${{ steps.plan.outputs.kind }}
+        run: |
+          if [ "$KIND" = beta ]; then
+            gh release create "$TAG" dist/* --target "$GITHUB_SHA" --prerelease \
+              --title "Nightly beta $TAG" \
+              --notes "Automated nightly build of main at $GITHUB_SHA. Install the .plugin file on claude.ai, or use agent-relay-claude.zip / agent-relay-codex.zip."
+          else
+            gh release create "$TAG" dist/* --verify-tag --latest --title "$TAG" --generate-notes
+          fi
+
+  notify-marketplace:
+    name: Request marketplace refresh
+    needs: release
+    if: needs.release.outputs.kind == 'stable'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Dispatch marketplace build
+        env:
+          GH_TOKEN: ${{ secrets.MARKETPLACE_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "MARKETPLACE_DISPATCH_TOKEN not configured; skipping marketplace dispatch."
+            exit 0
+          fi
+          gh workflow run pages.yml \
+            --repo swack-tools/ai-plugin-marketplace \
+            --ref main \
+            -f plugin_repository="$GITHUB_REPOSITORY" \
+            -f plugin_tag="${{ needs.release.outputs.tag }}"
+          echo "Requested marketplace refresh for $GITHUB_REPOSITORY at ${{ needs.release.outputs.tag }}." >> "$GITHUB_STEP_SUMMARY"

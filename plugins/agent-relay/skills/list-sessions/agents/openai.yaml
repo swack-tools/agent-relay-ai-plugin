@@ -1,0 +1,4 @@
+interface:
+  display_name: "List Sessions"
+  short_description: "Find live Claude Code and Codex sessions"
+  default_prompt: "Use $list-sessions to show the agent sessions running on this computer."

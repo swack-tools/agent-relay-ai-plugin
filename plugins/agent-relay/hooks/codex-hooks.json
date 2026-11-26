@@ -1,0 +1,39 @@
+{
+  "description": "agent-relay for Codex: registers the thread with its relay address and delivers any mailbox messages when a turn starts. Messages to Codex normally arrive through codex queue.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/scripts/relay.py\" hook --agent codex session-start",
+            "timeout": 15,
+            "statusMessage": "Registering agent-relay address"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/scripts/relay.py\" hook --agent codex prompt",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/scripts/relay.py\" hook --agent codex stop",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

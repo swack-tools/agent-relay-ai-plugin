@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "agent-relay",
+  "overview": {
+    "path": "docs/index.md",
+    "format": "markdown",
+    "mode": "lead",
+    "required": true
+  },
+  "examples": [
+    {
+      "id": "skill-relay-map",
+      "capability_refs": ["skill:relay-map"],
+      "title": "Open the Relay Map pew-pew dashboard",
+      "input_or_trigger": "/agent-relay:relay-map Open the Relay Map dashboard to inspect live agents and message traffic.",
+      "platform": "claude-code",
+      "prerequisites": ["Enable the Agent Relay plugin and its bundled relay MCP server."],
+      "expected_behavior": "Launch the interactive Relay Map MCP App showing live agents, message arcs, health alerts, and token burn.",
+      "sources": [
+        {
+          "path": "plugins/agent-relay/skills/relay-map/SKILL.md",
+          "format": "markdown",
+          "mode": "section",
+          "heading_path": ["Opening the MCP Dashboard"]
+        }
+      ],
+      "evidence": "documented"
+    },
+    {
+      "id": "tool-relay-map",
+      "capability_refs": ["mcp_tool:relay_map"],
+      "title": "Open Relay Map from MCP",
+      "input_or_trigger": "Show the Relay Map dashboard filtered to waiting agents.",
+      "platform": "claude-code",
+      "prerequisites": ["Connect the relay MCP server."],
+      "expected_behavior": "Return the fleet summary and render ui://agent-relay/relay-map.html.",
+      "sources": [
+        {
+          "path": "docs/reference.md",
+          "format": "markdown",
+          "mode": "section",
+          "heading_path": ["MCP tools"]
+        }
+      ],
+      "evidence": "documented"
+    }
+  ],
+  "platforms": {
+    "antigravity": {
+      "status": "documented",
+      "notes": "Install with agy plugin install https://github.com/swack-tools/agent-relay-ai-plugin and open Agent Relay from the Plugins sidebar.",
+      "sources": [
+        {
+          "path": "docs/usage.md",
+          "format": "markdown",
+          "mode": "section",
+          "heading_path": ["Client usage"]
+        }
+      ]
+    },
+    "claude-code": {
+      "status": "documented",
+      "notes": "Install from swack-tools/agent-relay-ai-plugin and invoke /agent-relay:relay-map or /agent-relay:message-session.",
+      "sources": [
+        {
+          "path": "docs/usage.md",
+          "format": "markdown",
+          "mode": "section",
+          "heading_path": ["Client usage"]
+        }
+      ]
+    },
+    "codex": {
+      "status": "documented",
+      "notes": "Install from swack-tools/agent-relay-ai-plugin and invoke $relay-map or $message-session.",
+      "sources": [
+        {
+          "path": "docs/usage.md",
+          "format": "markdown",
+          "mode": "section",
+          "heading_path": ["Client usage"]
+        }
+      ]
+    }
+  },
+  "mcpServers": {
+    "relay": {
+      "description": "Local stdio MCP server providing 7 agent-relay tools and the interactive Relay Map pew-pew dashboard.",
+      "sources": [
+        {
+          "path": "docs/reference.md",
+          "format": "markdown",
+          "mode": "section",
+          "heading_path": ["MCP tools"]
+        }
+      ]
+    }
+  },
+  "changelog": null
+}

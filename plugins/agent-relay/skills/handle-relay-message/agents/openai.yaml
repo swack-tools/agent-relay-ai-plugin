@@ -1,0 +1,4 @@
+interface:
+  display_name: "Handle Relay Message"
+  short_description: "Act on and reply to a relayed message"
+  default_prompt: "Use $handle-relay-message to check my relay inbox."

@@ -1,0 +1,14 @@
+# Mounted as ~/.ssh/config for the hub. Use addresses the cluster's pods can
+# reach (a LAN address, or a VPN address the node routes to).
+Host *
+    User me
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+    StrictHostKeyChecking yes
+    UserKnownHostsFile ~/.ssh/known_hosts
+
+Host laptop
+    HostName 10.0.0.20
+
+Host buildbox
+    HostName 10.0.0.30

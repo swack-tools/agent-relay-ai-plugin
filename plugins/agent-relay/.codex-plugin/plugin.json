@@ -1,0 +1,47 @@
+{
+  "name": "agent-relay",
+  "version": "1.1.0",
+  "description": "Let Claude Code, Codex, Antigravity, opencode and pi sessions message each other on one computer or over ssh, with the live Relay Map MCP dashboard.",
+  "author": {
+    "name": "SwackTech LLC",
+    "url": "https://github.com/swack-tools"
+  },
+  "homepage": "https://github.com/swack-tools/agent-relay-ai-plugin",
+  "repository": "https://github.com/swack-tools/agent-relay-ai-plugin",
+  "license": "GPL-3.0-only",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "multi-agent",
+    "sessions",
+    "messaging",
+    "ssh",
+    "handoff"
+  ],
+  "interface": {
+    "displayName": "Agent Relay",
+    "shortDescription": "Message Claude, Codex and Antigravity sessions",
+    "longDescription": "Agent Relay is an independent plugin by SwackTech LLC. It teaches Claude Code, Codex and Antigravity how to find each other's live sessions and send them messages, in the desktop apps or the terminal, on the same computer or on another computer you reach with ssh. Messages to Codex use codex queue on the shared Codex app-server daemon; messages to Claude Code go to a local mailbox that the plugin's hooks deliver; messages to Antigravity go through its own agentapi or message store. Replies come back the same way, and long prompts travel as files. It sends only what you ask it to send and is not endorsed by Anthropic or OpenAI.",
+    "developerName": "SwackTech LLC",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/swack-tools/agent-relay-ai-plugin",
+    "supportURL": "https://github.com/swack-tools/agent-relay-ai-plugin/issues",
+    "privacyPolicyURL": "https://github.com/swack-tools/agent-relay-ai-plugin/blob/main/SECURITY.md",
+    "termsOfServiceURL": "https://github.com/swack-tools/agent-relay-ai-plugin/blob/main/LICENSE",
+    "defaultPrompt": [
+      "List the agent sessions running on this computer and on pc.",
+      "Send the billing Codex session on laptop the review in /tmp/review.md.",
+      "Ask my Claude session in billing-api whether its tests pass and wait for the answer."
+    ],
+    "brandColor": "#1F3A5F",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png"
+  },
+  "skills": "./skills/",
+  "hooks": "./hooks/codex-hooks.json",
+  "mcpServers": "./.mcp.json"
+}

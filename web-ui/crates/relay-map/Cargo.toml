@@ -1,0 +1,22 @@
+[package]
+name = "relay-map"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Collector and live hub for the Relay Map web UI of agent-relay"
+
+[dependencies]
+relay-map-core = { path = "../relay-map-core" }
+serde.workspace = true
+serde_json.workspace = true
+anyhow = "1"
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+clap = { version = "4", features = ["derive"] }
+regex = "1"
+shell-words = "1"
+libc = "0.2"
+toml = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "process", "io-util", "sync", "time", "net", "signal", "fs"] }
+axum = { version = "0.7", features = ["ws"] }
+tower-http = { version = "0.6", features = ["fs"] }
+futures-util = "0.3"

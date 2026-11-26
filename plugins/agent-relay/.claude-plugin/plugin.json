@@ -1,0 +1,29 @@
+{
+  "name": "agent-relay",
+  "version": "1.1.0",
+  "description": "Let Claude Code, Codex, Antigravity, opencode and pi sessions message each other on one computer or over ssh, with the live Relay Map MCP dashboard.",
+  "author": {
+    "name": "SwackTech LLC",
+    "url": "https://github.com/swack-tools"
+  },
+  "homepage": "https://github.com/swack-tools/agent-relay-ai-plugin",
+  "repository": "https://github.com/swack-tools/agent-relay-ai-plugin",
+  "license": "GPL-3.0-only",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "antigravity",
+    "opencode",
+    "pi",
+    "multi-agent",
+    "sessions",
+    "messaging",
+    "ssh",
+    "mcp"
+  ],
+  "displayName": "Agent Relay",
+  "icon": "./assets/icon.png",
+  "mcpServers": "./.mcp.json",
+  "documentationUrl": "https://github.com/swack-tools/agent-relay-ai-plugin#readme",
+  "supportUrl": "https://github.com/swack-tools/agent-relay-ai-plugin/issues"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "tools": [
+    {
+      "name": "relay_map",
+      "title": "Open Relay Map dashboard",
+      "description": "Open the interactive Relay Map pew-pew dashboard showing live Claude Code, Codex, Antigravity, opencode, and pi sessions, message arcs, health alerts, token burn, and broadcast controls."
+    },
+    {
+      "name": "relay_sessions",
+      "title": "List live agent sessions",
+      "description": "List live Claude Code, Codex, Antigravity, opencode, and pi sessions on this computer or over ssh."
+    },
+    {
+      "name": "relay_send",
+      "title": "Send relayed message",
+      "description": "Send a relayed message to a live agent session on this computer or over ssh, optionally waiting for a reply."
+    },
+    {
+      "name": "relay_inbox",
+      "title": "Inspect session inbox",
+      "description": "Inspect pending relayed messages in a local Claude Code or pi session mailbox."
+    },
+    {
+      "name": "relay_read_reply",
+      "title": "Read recent agent replies",
+      "description": "Read recent assistant replies from a Claude Code, Codex, Antigravity, opencode, or pi session."
+    },
+    {
+      "name": "relay_broadcast",
+      "title": "Broadcast to agents",
+      "description": "Preview or send a broadcast message to all live agents, a pool, or selected agents through agent-relay."
+    },
+    {
+      "name": "relay_transcript",
+      "title": "Read session transcript",
+      "description": "Read an agent session's recorded transcript (flattened turns or raw JSONL tail) from the collector's recorded transcript path."
+    }
+  ]
+}

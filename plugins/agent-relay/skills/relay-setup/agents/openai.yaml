@@ -1,0 +1,4 @@
+interface:
+  display_name: "Relay Setup"
+  short_description: "Diagnose agent-relay and ssh setup"
+  default_prompt: "Use $relay-setup to check agent-relay on this computer and on pc."
