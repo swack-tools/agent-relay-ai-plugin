@@ -1,0 +1,79 @@
+<p class="eyebrow">Setup &amp; multi-host SSH</p>
+<h1>Install in your<span> coding client</span></h1>
+<p class="lead">Install Agent Relay on every computer whose sessions should receive messages. To only send from one computer to another, key-based <code>ssh</code> and <code>python3</code> 3.9+ on the target are enough.</p>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#quickstart">Requirements</a>
+  <a href="#antigravity">Antigravity</a>
+  <a href="#claude-code">Claude Code</a>
+  <a href="#claude-desktop">Claude Desktop</a>
+  <a href="#codex-cli">Codex CLI &amp; Desktop</a>
+  <a href="#opencode">opencode</a>
+  <a href="#pi">pi</a>
+  <a href="#ssh-setup">Multi-host SSH</a>
+  <a href="#releases">Release archives</a>
+</nav>
+
+<section id="quickstart">
+  <h2>Requirements</h2>
+  <ul>
+    <li><strong>Python 3.9 or newer</strong> on every computer involved (all scripts and the MCP server use only the Python standard library).</li>
+    <li><strong>Key-based <code>ssh</code></strong> between computers (<code>ssh &lt;alias&gt; true</code> with no prompt) in each direction you want replies to travel.</li>
+    <li><strong>Target client running:</strong> Codex app/CLI (shared daemon), Claude Code (hooks installed), Antigravity (app/IDE/CLI), opencode (background service), or pi (extension loaded).</li>
+  </ul>
+</section>
+
+<section id="antigravity">
+  <h2>Antigravity (app, IDE &amp; <code>agy</code> CLI)</h2>
+  <pre><code>agy plugin install https://github.com/swack-tools/agent-relay-ai-plugin
+agy plugin enable agent-relay</code></pre>
+  <p>Open <strong>Agent Relay</strong> from the left sidebar under <strong>Plugins</strong>, open <strong>Relay Map</strong> from the side pane <code>+</code> menu, or invoke <code>/relay-map</code>, <code>/list-sessions</code>, <code>/message-session</code>, <code>/handle-relay-message</code>, and <code>/relay-setup</code>.</p>
+</section>
+
+<section id="claude-code">
+  <h2>Claude Code</h2>
+  <pre><code>claude plugin marketplace add swack-tools/agent-relay-ai-plugin
+claude plugin install agent-relay@agent-relay</code></pre>
+  <p>Restart open Claude Code sessions afterwards so the <code>SessionStart</code> hook registers each session and starts the idle wake-up watcher. Invoke <code>/agent-relay:relay-map</code> or <code>/agent-relay:message-session</code>.</p>
+</section>
+
+<section id="claude-desktop">
+  <h2>Claude Desktop</h2>
+  <p>Open <strong>Customize → Plugins → Add → Add marketplace → Add from GitHub</strong>, enter <code>swack-tools/agent-relay-ai-plugin</code> (or <code>swack-tools/ai-plugin-marketplace</code>), and install <strong>Agent Relay</strong>. You can also upload <code>agent-relay-claude.zip</code> or <code>agent-relay-&lt;version&gt;.plugin</code> from the <a href="#releases">verified releases</a>.</p>
+</section>
+
+<section id="codex-cli">
+  <h2>Codex CLI &amp; Desktop</h2>
+  <pre><code>codex plugin marketplace add swack-tools/agent-relay-ai-plugin
+codex plugin add agent-relay@agent-relay</code></pre>
+  <p>Open <code>codex</code> and press <code>t</code> to review and trust the plugin's hooks. Invoke <code>$relay-map</code>, <code>$list-sessions</code>, <code>$message-session</code>, or <code>$relay-setup</code>. Messages reach Codex through <code>codex queue</code> on the shared app-server daemon.</p>
+</section>
+
+<section id="opencode">
+  <h2>opencode</h2>
+  <pre><code>opencode plugin add 'github:swack-tools/agent-relay-ai-plugin#main::path:plugins/agent-relay'</code></pre>
+  <p>From a local clone, add the path to <code>plugins</code> in <code>~/.config/opencode/opencode.json</code>. Messages reach opencode sessions through the opencode background service via <code>opencode api session.prompt</code>.</p>
+</section>
+
+<section id="pi">
+  <h2>pi</h2>
+  <pre><code>pi install git:github.com/swack-tools/agent-relay-ai-plugin</code></pre>
+  <p>Restart open pi sessions (or run <code>/reload</code>) to load the TypeScript extension, which registers each session and polls the mailbox every two seconds to wake idle sessions.</p>
+</section>
+
+<section id="ssh-setup">
+  <h2>Multi-host SSH &amp; doctor check</h2>
+  <p>Define clean aliases in <code>~/.ssh/config</code> for each computer, then verify connectivity and PATH discovery:</p>
+  <pre><code>python3 &lt;plugin-folder&gt;/scripts/relay.py doctor
+python3 &lt;plugin-folder&gt;/scripts/relay.py doctor --host laptop
+python3 &lt;plugin-folder&gt;/scripts/relay.py sessions --host laptop</code></pre>
+  <p>Remote sends stream <code>scripts/relay.py</code> directly into <code>ssh HOST python3 -</code>, so no remote plugin checkout is required just to send.</p>
+</section>
+
+<section id="releases">
+  <h2>Verified release archives</h2>
+  <p>Tagged releases publish deterministic client archives (<code>agent-relay-claude.zip</code>, <code>agent-relay-codex.zip</code>, <code>agent-relay-&lt;version&gt;.zip</code>, and <code>.plugin</code>) with a verified <code>SHA256SUMS</code> manifest:</p>
+  <pre><code>gh release download --repo swack-tools/agent-relay-ai-plugin --pattern '*.zip' --pattern 'SHA256SUMS'
+shasum -a 256 -c SHA256SUMS --ignore-missing</code></pre>
+  <p><a href="https://github.com/swack-tools/agent-relay-ai-plugin/releases/latest">Browse latest release artifacts on GitHub ↗</a></p>
+</section>

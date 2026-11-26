@@ -131,7 +131,7 @@ SECRET_PATTERNS = [
 ]
 IDENT_PATTERNS = [
     ("local user path", re.compile(r"/Users/[A-Za-z0-9._-]{2,}/|/home/(?!relay\b|u\b|me\b|user\b)[A-Za-z0-9._-]{2,}/")),
-    ("real host or internal domain", re.compile(r"(?:\b(?:m4air|m5air|0fc6ce)\b|swacktech\.com)", re.IGNORECASE)),
+    ("real host or internal domain", re.compile(r"\b(?:m4air|m5air|0fc6ce)\b", re.IGNORECASE)),
     ("private project name", re.compile(r"\b(?:lg_g5|lg-g5|g5_calibration|colorimeter|rustyget|nzbget|zipfast|prybar|zipview|home-net|par-rs)\b", re.IGNORECASE)),
 ]
 LOCK_FILES = {"web-ui/Cargo.lock", "ui/package-lock.json"}
@@ -149,7 +149,7 @@ for p in scan_paths:
     rel_s = rel.as_posix()
     if any(part in FORBIDDEN or part == ".git" or part == "target" for part in rel.parts):
         continue
-    if rel_s in LOCK_FILES or p.suffix in {".png", ".svg", ".ico", ".zip", ".plugin", ".gz"}:
+    if rel_s in LOCK_FILES or p.suffix in {".png", ".webp", ".svg", ".ico", ".zip", ".plugin", ".gz"}:
         continue
     try:
         txt = p.read_text(encoding="utf-8")
@@ -161,6 +161,10 @@ for p in scan_paths:
         continue
     for label, rx in IDENT_PATTERNS:
         check(not rx.search(txt), f"sensitive {label} found in {rel_s}")
+    for m in re.finditer(r"[A-Za-z0-9.-]*swacktech\.com", txt, re.IGNORECASE):
+        dom = m.group(0).lower().lstrip(".")
+        check(dom == "ai.swacktech.com" or dom.endswith(".ai.swacktech.com"),
+              f"sensitive internal domain {dom} found in {rel_s}")
 
 if errors:
     print("\n".join(f"error: {e}" for e in errors))

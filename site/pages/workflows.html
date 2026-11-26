@@ -1,0 +1,62 @@
+<p class="eyebrow">Routing, skills &amp; Kubernetes</p>
+<h1>Cross-agent workflows<span> &amp; architecture</span></h1>
+<p class="lead">Every client keeps its own native transport while sharing one unified addressing scheme (<code>&lt;agent&gt;:&lt;target&gt;[@host]</code>), peer-framed envelope format, and live observability layer.</p>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#routing">Message routing</a>
+  <a href="#skills">Five bundled skills</a>
+  <a href="#security">Security &amp; peer framing</a>
+  <a href="#kubernetes">Kubernetes Relay Map hub</a>
+</nav>
+
+<section id="routing">
+  <h2>How messages travel across clients</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Target</th><th>Transport</th><th>Arrival behavior</th></tr></thead>
+      <tbody>
+        <tr><td><code>codex</code></td><td><code>codex queue</code> on shared app-server daemon</td><td>Idle thread: right away. Mid-turn: at turn end. Unloaded: on open or immediately with <code>--wake</code>.</td></tr>
+        <tr><td><code>claude</code></td><td>Mailbox in <code>~/.agent-relay/inbox/</code> + hook watcher</td><td>Idle session: woken within seconds for ~1 hour after each turn; otherwise delivered on next prompt.</td></tr>
+        <tr><td><code>antigravity</code> (desktop)</td><td><code>agentapi send-message</code> via desktop hub</td><td>Right away; an idle conversation starts a new turn with the relayed message.</td></tr>
+        <tr><td><code>antigravity</code> (IDE / CLI)</td><td>Cached language server <code>agentapi</code> or message store</td><td>Right away if conversation ran relay before; otherwise delivered at start of next turn.</td></tr>
+        <tr><td><code>opencode</code></td><td><code>opencode api session.prompt</code></td><td>Idle session: right away. Mid-turn: when the turn finishes.</td></tr>
+        <tr><td><code>pi</code></td><td>Mailbox in <code>~/.agent-relay/inbox/</code> + TS extension</td><td>Polls every 2 seconds; starts a turn when idle or delivers when the current turn ends.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Long prompts (over ~6,000 characters) are automatically written to a file on the receiving computer and referenced in the relayed envelope.</p>
+</section>
+
+<section id="skills">
+  <h2>Five bundled skills</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Skill</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>list-sessions</code></td><td>Discover live Claude Code, Codex, Antigravity, opencode, and pi sessions locally or over <code>ssh</code>.</td></tr>
+        <tr><td><code>message-session</code></td><td>Send a prompt, review, or file to a target session and optionally wait for its reply.</td></tr>
+        <tr><td><code>handle-relay-message</code></td><td>Process incoming peer-agent messages safely and reply using the embedded sender address.</td></tr>
+        <tr><td><code>relay-map</code></td><td>Open the Relay Map pew-pew dashboard via MCP (<code>relay_map</code>) or run the standalone Rust/WASM hub.</td></tr>
+        <tr><td><code>relay-setup</code></td><td>Diagnose <code>ssh</code> aliases, <code>PATH</code>, Codex daemon mismatches, hook trust, and missing sessions.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="security">
+  <h2>Peer-agent framing &amp; trust boundaries</h2>
+  <ul>
+    <li><strong>Peer origin markers:</strong> Relayed messages are explicitly framed as coming from a peer AI session—never spoofed as user instructions. Bundled skills require bringing risky or out-of-scope requests back to the user.</li>
+    <li><strong>Owner-only local state:</strong> <code>~/.agent-relay/</code> directories and cached Antigravity language server tokens are created with <code>0600</code> permissions; CSRF tokens are never printed or logged.</li>
+    <li><strong>Zero external telemetry:</strong> Messages travel only over local sockets, owner-only files, and your own <code>ssh</code> connections.</li>
+  </ul>
+</section>
+
+<section id="kubernetes">
+  <h2>Standalone Rust/WASM hub &amp; Kubernetes deployment</h2>
+  <p>For teams or multi-workstation setups that want an always-on web dashboard, <code>web-ui/</code> builds the Rust <code>relay-map</code> Axum server and WASM frontend, complete with Kustomize manifests in <code>web-ui/deploy/k8s/</code> for Envoy Gateway + SSH tailing.</p>
+  <pre><code>cargo build --release --manifest-path web-ui/Cargo.toml
+./web-ui/deploy/k8s/build-image.sh
+kubectl apply -k web-ui/deploy/k8s/example</code></pre>
+  <p>See <a href="https://github.com/swack-tools/agent-relay-ai-plugin/blob/main/web-ui/deploy/k8s/README.md"><code>web-ui/deploy/k8s/README.md</code> on GitHub ↗</a> for SSH key secret setup, pool isolation config, and Envoy routing details.</p>
+</section>

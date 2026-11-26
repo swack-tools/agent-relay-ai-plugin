@@ -1,0 +1,93 @@
+<p class="eyebrow">CLAUDE · CODEX · ANTIGRAVITY · OPENCODE · PI</p>
+<h1>Let your AI agents<br><span>talk across sessions</span></h1>
+<p class="eyebrow">Five runtimes · 7 MCP tools · live Relay Map pew-pew UI · SSH multi-host</p>
+<p class="lead">Agent Relay lets Claude Code, Codex, Antigravity, opencode, and pi sessions find each other, exchange prompts and files locally or over <code>ssh</code>, and stream live traffic, health alerts, and token burn into the bundled Relay Map MCP App.</p>
+<div class="actions"><a class="button" href="install.html">Install in your client <span aria-hidden="true">→</span></a><a class="button secondary" href="relay-map.html">Explore Relay Map UI</a></div>
+<div class="facts"><span>Zero third-party Python dependencies</span><span>Works in desktop apps &amp; terminals</span><span>Interactive MCP App + Kubernetes hub</span></div>
+
+<section class="showcase" data-showcase aria-label="Interactive Relay Map UI showcase">
+  <div class="showcase-tabs" role="tablist" aria-label="Relay Map views">
+    <button type="button" class="showcase-tab" role="tab" aria-selected="true"
+      data-src="assets/screenshots/01-orbital-fleet-map.png"
+      data-alt="Relay Map orbital fleet view showing four computers, 14 agents across five runtimes, glowing message arcs, and live traffic feed."
+      data-title="Orbital Fleet Map"
+      data-desc="Live Canvas2D map of every agent grouped by computer, project, and pool, with mid-flight Bezier message pulses, 72-bar traffic timeline, and ★ Watching card.">Orbital Map</button>
+    <button type="button" class="showcase-tab" role="tab" aria-selected="false"
+      data-src="assets/screenshots/02-agent-inspector-panel.png"
+      data-alt="Relay Map Agent Inspector drawer showing token split bar, burn rate, 24h activity matrix, subagents, files, and skills."
+      data-title="Agent Inspector"
+      data-desc="Click any node to zoom in and inspect its current focus, fresh vs. cache token split, 10-minute burn rate, 24h activity matrix, subagents, files, and one-click Session Log / Ask in chat.">Agent Inspector</button>
+    <button type="button" class="showcase-tab" role="tab" aria-selected="false"
+      data-src="assets/screenshots/04-fleet-table-drawer.png"
+      data-alt="Relay Map Fleet table showing 14 agents across Claude, Codex, Antigravity, opencode, and pi with 15-minute burn sparklines."
+      data-title="Sortable Fleet Table"
+      data-desc="Compare every live agent by status, active time, fresh &amp; cache tokens, tok/min burn rate, 15-minute sparklines, and USD cost—with inline search filters like kind:codex status:waiting.">Fleet Table</button>
+    <button type="button" class="showcase-tab" role="tab" aria-selected="false"
+      data-src="assets/screenshots/05-attention-health-alerts.png"
+      data-alt="Relay Map Attention alerts drawer highlighting looping, stuck, waiting, and cross-pool isolated alerts."
+      data-title="Health &amp; Attention Alerts"
+      data-desc="Automatically surfaces looping ping-pong or hot-file edits, stuck busy sessions, long-waiting prompts, spend spikes, and cross-pool messages between isolated pools.">Health Alerts</button>
+    <button type="button" class="showcase-tab" role="tab" aria-selected="false"
+      data-src="assets/screenshots/06-spend-cost-analytics.png"
+      data-alt="Relay Map Spend breakdown showing total USD spend, hourly burn rate, and bars by project, computer, model, and agent type."
+      data-title="Spend &amp; Cost Analytics"
+      data-desc="Track total fleet spend and live $/hour burn broken down across projects, computers, models, and agent runtimes, with click-to-filter thermal coloring.">Spend Analytics</button>
+    <button type="button" class="showcase-tab" role="tab" aria-selected="false"
+      data-src="assets/screenshots/07-session-transcript-viewer.png"
+      data-alt="Relay Map Session Log viewer displaying user prompts, collapsible thinking blocks, tool calls, results, and agent replies."
+      data-title="Session Transcript Viewer"
+      data-desc="Read any local or remote agent's JSONL transcript inline with collapsible thinking and tool-call rows, hide-tools toggles, and raw tail copy.">Session Log</button>
+  </div>
+  <figure class="shot">
+    <img data-showcase-img src="assets/screenshots/01-orbital-fleet-map.png" width="1920" height="1200" alt="Relay Map orbital fleet view showing four computers, 14 agents across five runtimes, glowing message arcs, and live traffic feed." data-caption="Relay Map — Orbital Fleet View (click any screenshot to zoom)">
+  </figure>
+  <p class="showcase-caption"><strong data-showcase-title>Orbital Fleet Map</strong> — <span data-showcase-desc>Live Canvas2D map of every agent grouped by computer, project, and pool, with mid-flight Bezier message pulses, 72-bar traffic timeline, and ★ Watching card.</span></p>
+</section>
+
+<section aria-labelledby="capabilities">
+  <h2 id="capabilities">Built for multi-agent fleets</h2>
+  <div class="cards">
+    <article><span class="number">01 / DISCOVERY</span><h3>Find any live session</h3><p><code>relay_sessions</code></p><p class="muted">List active Claude Code, Codex, Antigravity, opencode, and pi sessions on this computer or across any host in your <code>~/.ssh/config</code>.</p></article>
+    <article><span class="number">02 / MESSAGING</span><h3>Route prompts &amp; files</h3><p><code>relay_send</code></p><p class="muted">Deliver short prompts or large review files directly into idle or busy sessions, carry the sender's reply address, and wait for responses.</p></article>
+    <article><span class="number">03 / RELAY MAP UI</span><h3>Watch live traffic</h3><p><code>ui://agent-relay/relay-map.html</code></p><p class="muted">Open the interactive pew-pew MCP App inside Antigravity, Claude, or Codex to watch glowing message arcs, token burn, and alerts.</p></article>
+    <article><span class="number">04 / HEALTH</span><h3>Catch stuck or looping runs</h3><p><code>working · waiting · stuck · looping</code></p><p class="muted">Detect relay ping-pong, repetitive file edits, silent busy sessions, and cross-pool traffic between isolated pools.</p></article>
+    <article><span class="number">05 / BROADCAST</span><h3>Preview before sending</h3><p><code>relay_broadcast</code></p><p class="muted">Target every live agent, a single pool, or a specific host with mandatory recipient dry-run preview and two-step confirmation.</p></article>
+    <article><span class="number">06 / KUBERNETES</span><h3>Scale to a cluster hub</h3><p><code>web-ui/deploy/k8s/</code></p><p class="muted">Run the standalone Rust/WASM <code>relay-map</code> server over SSH to tail multiple workstations behind an Envoy Gateway.</p></article>
+  </div>
+</section>
+
+<section class="split" aria-labelledby="how-it-works">
+  <div>
+    <p class="eyebrow">Zero-daemon-lock-in architecture</p>
+    <h2 id="how-it-works">One stdlib Python script,<br>native hooks in every client</h2>
+    <p><code>plugins/agent-relay/scripts/relay.py</code> runs on Python 3.9+ using only the standard library—so sending a message to a remote computer streams the script over <code>ssh HOST python3 -</code> with nothing extra to install.</p>
+    <p>When a session runs on a target machine, client-native hooks and extensions register its address, wake idle sessions, and frame incoming peer messages as coming from another agent rather than the user.</p>
+  </div>
+  <aside class="callout">
+    <h3>Three steps to cross-agent relay</h3>
+    <ol>
+      <li>Install Agent Relay in Antigravity, Claude Code, Codex, opencode, or pi.</li>
+      <li>Restart open sessions so lifecycle hooks register each conversation.</li>
+      <li>Open <strong>Relay Map</strong> or ask your agent to message a peer session.</li>
+    </ol>
+    <a href="install.html#quickstart">Follow the install walkthrough →</a>
+  </aside>
+</section>
+
+<section aria-labelledby="choose-client">
+  <h2 id="choose-client">Choose your client</h2>
+  <div class="link-grid">
+    <a href="install.html#antigravity">Antigravity <span>Plugin CLI, sidebar Relay Map UI &amp; hooks →</span></a>
+    <a href="install.html#claude-code">Claude Code <span>Marketplace install, hooks &amp; wake watcher →</span></a>
+    <a href="install.html#codex-cli">Codex CLI &amp; Desktop <span>Shared app-server daemon &amp; queue →</span></a>
+    <a href="install.html#opencode">opencode <span>Background service plugin &amp; prompt injection →</span></a>
+    <a href="install.html#pi">pi <span>TypeScript extension &amp; 2-second mailbox poll →</span></a>
+    <a href="workflows.html#kubernetes">Kubernetes Hub <span>Standalone Rust/WASM Relay Map deployment →</span></a>
+  </div>
+</section>
+
+<section class="callout">
+  <h2>See every view of the Relay Map UI</h2>
+  <p>Inspect all 9 high-DPI views—from orbital fleet topology and cross-machine channel conversations to spend breakdowns, session logs, and swarm hierarchy grouping.</p>
+  <p><a href="relay-map.html">Open the Relay Map UI visual tour →</a></p>
+</section>

@@ -1,6 +1,6 @@
 # Agent Relay
 
-Cross-client agent messaging and live Relay Map observability for Antigravity, Claude Code, Codex, opencode, and pi, on one computer or across computers over `ssh`.
+Cross-client agent messaging and live Relay Map observability for Antigravity, Claude Code, Codex, opencode, and pi, on one computer or across computers over `ssh`. Read the [documentation site](https://relay.ai.swacktech.com/) for the Relay Map visual tour, install walkthrough, and tool reference.
 
 ## Key features
 

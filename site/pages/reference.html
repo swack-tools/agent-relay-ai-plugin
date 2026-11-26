@@ -1,0 +1,75 @@
+<p class="eyebrow">MCP tools, CLI, hooks &amp; checks</p>
+<h1>Technical<span> reference</span></h1>
+<p class="lead">Complete reference for the 7 model-visible <code>relay</code> MCP tools, 2 app-only UI tools, <code>relay.py</code> CLI subcommands, client hooks, and package verification checks.</p>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#mcp-tools">MCP tools</a>
+  <a href="#cli">CLI subcommands</a>
+  <a href="#hooks">Lifecycle hooks</a>
+  <a href="#layout">Package &amp; state layout</a>
+  <a href="#checks">Local CI &amp; packaging</a>
+</nav>
+
+<section id="mcp-tools">
+  <h2><code>relay</code> MCP server tools</h2>
+  <p><code>plugins/agent-relay/scripts/relay_mcp_server.py</code> runs as a Python 3.9+ stdlib stdio JSON-RPC 2.0 server serving <code>ui://agent-relay/relay-map.html</code> alongside 7 model-visible tools and 2 app-only UI tools (<code>relay_map_poll</code>, <code>relay_map_prefs</code>):</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Tool</th><th>Title</th><th>Behavior</th></tr></thead>
+      <tbody>
+        <tr><td><code>relay_map</code></td><td>Open Relay Map dashboard</td><td>Returns fleet summary and renders <code>ui://agent-relay/relay-map.html</code> (supports <code>filter</code>, <code>tab</code>, <code>focus_agent</code>, and <code>lookback_hours</code>).</td></tr>
+        <tr><td><code>relay_sessions</code></td><td>List live agent sessions</td><td>Lists live sessions across all 5 clients locally or on an <code>ssh</code> host.</td></tr>
+        <tr><td><code>relay_send</code></td><td>Send relayed message</td><td>Routes a message or file to a target address, optionally waiting for a reply.</td></tr>
+        <tr><td><code>relay_inbox</code></td><td>Inspect session inbox</td><td>Reads or peeks pending messages in a local Claude Code or pi mailbox.</td></tr>
+        <tr><td><code>relay_read_reply</code></td><td>Read recent agent replies</td><td>Reads recent assistant turns from a Claude, Codex, Antigravity, opencode, or pi session.</td></tr>
+        <tr><td><code>relay_broadcast</code></td><td>Broadcast to agents</td><td>Previews (<code>dry_run=true</code>) or sends a broadcast to all agents, a pool, or a host.</td></tr>
+        <tr><td><code>relay_transcript</code></td><td>Read session transcript</td><td>Returns flattened conversation turns or raw JSONL tail from a recorded session transcript.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="cli">
+  <h2><code>relay.py</code> CLI subcommands</h2>
+  <pre><code>relay sessions [--host pc] [--all] [--json]
+relay send --to codex:&lt;thread|name&gt;[@host] --message '...' [--file PATH] [--wake] [--wait-reply SECONDS]
+relay read &lt;address&gt; [--last N] [--since MS] [--wait SECONDS]
+relay inbox [--peek]        relay whoami        relay name &lt;label&gt;
+relay doctor [--host pc]    relay gc            relay install-cli</code></pre>
+</section>
+
+<section id="hooks">
+  <h2>Per-client lifecycle hooks</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Client</th><th>Hook / extension file</th><th>Events</th></tr></thead>
+      <tbody>
+        <tr><td>Antigravity</td><td><code>plugins/agent-relay/hooks.json</code></td><td><code>SessionStart</code>, <code>PreInvocation</code>, <code>PostInvocation</code>, <code>Stop</code> (<code>--agent antigravity</code>)</td></tr>
+        <tr><td>Claude Code</td><td><code>plugins/agent-relay/hooks/hooks.json</code></td><td><code>SessionStart</code>, <code>UserPromptSubmit</code>, <code>Stop</code> + idle wake-up watcher</td></tr>
+        <tr><td>Codex</td><td><code>plugins/agent-relay/hooks/codex-hooks.json</code></td><td><code>SessionStart</code>, <code>UserPromptSubmit</code>, <code>Stop</code> (<code>--agent codex</code>)</td></tr>
+        <tr><td>opencode</td><td><code>plugins/agent-relay/opencode/index.js</code></td><td>Service plugin instructions injection</td></tr>
+        <tr><td>pi</td><td><code>plugins/agent-relay/pi/agent-relay.ts</code></td><td>Session registration &amp; 2-second mailbox poll</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="layout">
+  <h2>Package &amp; state layout</h2>
+  <ul>
+    <li><strong>Canonical plugin:</strong> <code>plugins/agent-relay/</code> contains <code>.antigravity-plugin/</code>, <code>.claude-plugin/</code>, <code>.codex-plugin/</code>, <code>skills/</code>, <code>hooks/</code>, <code>scripts/</code>, <code>opencode/</code>, <code>pi/</code>, and <code>assets/relay-map.html</code>.</li>
+    <li><strong>Local state:</strong> <code>~/.agent-relay/</code> stores registered sessions, <code>inbox/</code>, <code>outbox/</code>, <code>relay-map-prefs.json</code>, and <code>0600</code> cached Antigravity language server tokens (override with <code>AGENT_RELAY_HOME</code>).</li>
+    <li><strong>Catalog &amp; API metadata:</strong> <code>catalog-info.json</code> and <code>api/agent-relay/tools.json</code> describe capabilities for the <a href="https://ai.swacktech.com/plugins/agent-relay/">Swack Tools Marketplace</a>.</li>
+  </ul>
+</section>
+
+<section id="checks">
+  <h2>Local CI &amp; deterministic packaging</h2>
+  <pre><code>python3 -B scripts/check_plugin.py
+python3 -B -m unittest discover -s tests -v
+claude plugin validate --strict plugins/agent-relay
+claude plugin validate --strict .claude-plugin/marketplace.json
+cargo test --manifest-path web-ui/Cargo.toml
+python3 -B scripts/package_release.py dist
+python3 -B site/build.py /tmp/relay-site &amp;&amp; python3 -B site/check.py /tmp/relay-site</code></pre>
+</section>

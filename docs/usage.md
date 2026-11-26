@@ -8,6 +8,8 @@
 - **opencode**: Add with `opencode plugin add 'github:swack-tools/agent-relay-ai-plugin#main::path:plugins/agent-relay'`.
 - **pi**: Install with `pi install git:github.com/swack-tools/agent-relay-ai-plugin`.
 
+See the [installation and multi-host SSH guide](https://relay.ai.swacktech.com/install.html) for full setup instructions.
+
 ## Kubernetes deployment
 
 To run the standalone Rust/WASM Relay Map hub in a Kubernetes cluster, see `web-ui/deploy/k8s/README.md`.

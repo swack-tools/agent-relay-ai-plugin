@@ -1,0 +1,93 @@
+<p class="eyebrow">MCP App · ui://agent-relay/relay-map.html</p>
+<h1>Relay Map<span> visual tour</span></h1>
+<p class="lead">Every view of the bundled Canvas2D pew-pew dashboard—rendered from live multi-host telemetry across Claude Code, Codex, Antigravity, opencode, and pi. Click any screenshot to open a full-resolution preview.</p>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#fleet-map">Orbital Map</a>
+  <a href="#inspector-channel">Inspector &amp; Channels</a>
+  <a href="#fleet-health">Fleet &amp; Alerts</a>
+  <a href="#spend-logs">Spend &amp; Transcripts</a>
+  <a href="#broadcast-groups">Broadcast &amp; Grouping</a>
+  <a href="#shortcuts">Shortcuts &amp; Filters</a>
+</nav>
+
+<section id="fleet-map">
+  <h2>Orbital Fleet Map</h2>
+  <figure class="shot">
+    <img src="assets/screenshots/01-orbital-fleet-map.png" width="1920" height="1200" alt="Orbital fleet map showing four live hosts, 14 agents across five runtimes, glowing Bezier message channels, live feed, and traffic timeline." data-caption="01 · Orbital Fleet Map — Live hosts, 14 agents, mid-flight message pulses, ★ Watching card, and 72-bar traffic timeline">
+    <figcaption><strong>01 · Orbital Fleet Map</strong>Real-time Canvas2D topology grouped by computer, project, and pool. Glowing dashed Bezier channels carry mid-flight message pulses proportional to payload size, while the HUD tracks live hosts, health counts, token burn rate, and 24-hour traffic replay.</figcaption>
+  </figure>
+</section>
+
+<section id="inspector-channel">
+  <h2>Agent Inspector &amp; Channel Conversations</h2>
+  <div class="gallery-grid">
+    <figure class="shot">
+      <img src="assets/screenshots/02-agent-inspector-panel.png" width="1920" height="1200" alt="Agent Inspector panel zoomed onto claude:checkout-api@studio showing token split bar, burn rate, 24h activity SVG, and subagents." data-caption="02 · Agent Inspector Panel — Token split, burn rate, 24h activity matrix, subagents, touched files, and quick actions">
+      <figcaption><strong>02 · Agent Inspector</strong>Click any node to focus it and inspect its current task, fresh vs. cache token split, 10-minute burn rate, 24h 4-lane activity matrix (<code>msgs</code>, <code>files</code>, <code>git</code>, <code>subs</code>), touched files, skills, and one-click <em>Ask in chat</em> / <em>Session log</em> actions.</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="assets/screenshots/03-channel-conversation.png" width="1920" height="1200" alt="Channel conversation panel zooming between studio and macbook-pro for checkout-api and payment-ledger." data-caption="03 · Cross-Machine Channel Conversation — Peer cards and threaded relay messages between studio and macbook-pro">
+      <figcaption><strong>03 · Cross-Machine Channel Conversation</strong>Click any message arc or feed item to zoom across hosts, compare both peers side-by-side, and read the full threaded conversation (flagging cross-pool messages between isolated pools).</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="fleet-health">
+  <h2>Fleet Table &amp; Health Alerts</h2>
+  <div class="gallery-grid">
+    <figure class="shot">
+      <img src="assets/screenshots/04-fleet-table-drawer.png" width="1920" height="1200" alt="Sortable Fleet Table showing 14 agents across all five runtimes with fresh/cache tokens, tok/min, and 15-minute burn sparklines." data-caption="04 · Sortable Fleet Table — All 5 runtimes, status pills, fresh &amp; cache token burn, 15m sparklines, and USD cost">
+      <figcaption><strong>04 · Sortable Fleet Table</strong>Press <kbd>t</kbd> or click <strong>☰ Fleet</strong> to sort every agent by status, last activity, fresh or cache tokens, <code>tok/min</code>, 15-minute SVG sparkline, cost, files, messages, or subagents.</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="assets/screenshots/05-attention-health-alerts.png" width="1920" height="1200" alt="Attention alerts drawer with health coloring showing looping, cross-pool, stuck, and waiting alerts." data-caption="05 · Health &amp; Attention Alerts — Automatic detection of looping, stuck, waiting, high-spend, and cross-pool alerts">
+      <figcaption><strong>05 · Health &amp; Attention Alerts</strong>Press <kbd>a</kbd> to review prioritized alerts and <kbd>n</kbd> to step through them on the map—catching relay ping-pong, repetitive single-file edits, silent busy sessions, and cross-pool leaks.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="spend-logs">
+  <h2>Spend Analytics &amp; Session Transcripts</h2>
+  <div class="gallery-grid">
+    <figure class="shot">
+      <img src="assets/screenshots/06-spend-cost-analytics.png" width="1920" height="1200" alt="Spend analytics drawer showing total USD spend, hourly burn rate, and horizontal breakdown bars by project, computer, model, and agent type." data-caption="06 · Spend &amp; Cost Analytics — Fleet USD spend and live $/h burn across projects, computers, models, and runtimes">
+      <figcaption><strong>06 · Spend &amp; Cost Analytics</strong>Press <kbd>s</kbd> to inspect total spend and live <code>$/hour</code> burn broken down by project, computer, model, and agent runtime; click any bar to filter the map.</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="assets/screenshots/07-session-transcript-viewer.png" width="1920" height="1200" alt="Session log modal for codex:search-ranker@gpu-worker showing User, thinking, read_file, run_command, and Agent turns." data-caption="07 · Session Transcript Viewer — Inline JSONL transcript reader with collapsible thinking &amp; tool-call blocks">
+      <figcaption><strong>07 · Session Transcript Viewer</strong>Inspect any agent's recorded transcript via <code>relay_transcript</code> with collapsible <code>thinking</code> and <code>tool</code> blocks, <em>hide tools</em> / <em>hide thinking</em> filters, and one-click raw tail copy.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="broadcast-groups">
+  <h2>Broadcast Controls &amp; Hierarchy Grouping</h2>
+  <div class="gallery-grid">
+    <figure class="shot">
+      <img src="assets/screenshots/08-broadcast-preview-modal.png" width="1920" height="1200" alt="Broadcast modal targeting Pool: Payments with 6 previewed recipients and 10 skipped agents." data-caption="08 · Broadcast Preview Modal — Dry-run recipient preview and two-step send confirmation">
+      <figcaption><strong>08 · Two-Step Broadcast Modal</strong>Press <kbd>b</kbd> to broadcast to every live agent, a pool, or a single session. Preview always runs first via <code>relay_broadcast(dry_run=true)</code> before arming the Send button.</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="assets/screenshots/09-hierarchy-grouping-swarms.png" width="1920" height="1200" alt="Group by panel using Pools › computer › project preset with expand swarms enabled." data-caption="09 · Hierarchy Grouping &amp; Expanded Swarms — Reorderable Pool › Computer › Project rings and expanded swarm workers">
+      <figcaption><strong>09 · Hierarchy Grouping &amp; Swarm Expansion</strong>Press <kbd>g</kbd> to reorder concentric rings (<code>Pool</code>, <code>Computer</code>, <code>Project</code>, <code>Folder</code>, <code>Task</code>, <code>Agent type</code>, <code>Status</code>) and toggle <strong>expand swarms</strong> to render child workers individually.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="shortcuts">
+  <h2>Keyboard shortcuts &amp; search filters</h2>
+  <p>Search supports free-text matching plus structured qualifiers: <code>kind:codex</code>, <code>host:studio</code>, <code>status:waiting</code>, <code>status:alert</code>, <code>pool:payments</code>, <code>project:checkout</code>, <code>model:opus</code>, and <code>has:git</code>.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Key</th><th>Action</th><th>Key</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><code>/</code></td><td>Focus search bar (<code>Enter</code> zooms to best match)</td><td><code>c</code></td><td>Cycle node color mode: type → health → spend</td></tr>
+        <tr><td><code>j</code> / <code>k</code></td><td>Step to next / previous matching agent</td><td><code>w</code> / <code>y</code></td><td>Watch (star) agent / copy relay address</td></tr>
+        <tr><td><code>n</code></td><td>Jump to next attention alert on the map</td><td><code>g</code></td><td>Open Group By hierarchy ring customizer</td></tr>
+        <tr><td><code>a</code> <code>t</code> <code>m</code> <code>s</code></td><td>Open Attention, Agents, Messages, or Spend tab</td><td><code>r</code> / <code>f</code></td><td>Replay 24h traffic window / fit all nodes</td></tr>
+        <tr><td><code>b</code></td><td>Open Broadcast modal (previews recipients first)</td><td><code>Esc</code></td><td>Close log, modal, selection, or drawer</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>

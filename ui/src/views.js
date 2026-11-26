@@ -3,7 +3,7 @@ import { burnSeries, cacheReadSeries, costParts, HEALTH_META } from './insight.j
 import { UNPOOLED } from './state.js';
 import {
   ago, big, bytes, clock, dayClock, displayName, dur, el, esc, heat, hostColorHex,
-  inputVal, kindColor, projectOf, RELAY_TARGET_KINDS, rgba, setHtml, setInputVal,
+  inputVal, kindColor, parseHex, projectOf, RELAY_TARGET_KINDS, rgba, setHtml, setInputVal,
   shortPath, show, sq, tokensFresh, tokensTotal, truncate, usd,
 } from './util.js';
 

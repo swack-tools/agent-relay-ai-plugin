@@ -2,7 +2,7 @@
 
 ## MCP tools
 
-The bundled `relay` MCP server exposes 7 model-visible tools and 2 app-only UI tools (`relay_map_poll`, `relay_map_prefs`).
+The bundled `relay` MCP server exposes 7 model-visible tools and 2 app-only UI tools (`relay_map_poll`, `relay_map_prefs`). See the [complete technical reference](https://relay.ai.swacktech.com/reference.html) for CLI commands, hooks, and architecture details.
 
 | Tool | Title | Description |
 | :--- | :--- | :--- |
